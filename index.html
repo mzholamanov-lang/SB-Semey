@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1f33">
+<title>СБ Семей</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f5f7;color:#17212b;font-family:-apple-system,BlinkMacSystemFont,Arial}
+header{background:#0b1f33;color:white;padding:22px 18px}
+header h1{margin:0;font-size:27px}
+header p{margin:5px 0 0;opacity:.7}
+main{padding:15px;padding-bottom:80px;max-width:700px;margin:auto}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:white;border-radius:16px;padding:17px;box-shadow:0 2px 10px #0001}
+.card b{font-size:27px;display:block}
+small{color:#6b7280}
+h2{font-size:20px;margin:20px 0 10px}
+.search,input,select,textarea{width:100%;padding:13px;border:1px solid #d5dbe0;border-radius:11px;font-size:16px}
+textarea{height:100px}
+.item{background:white;padding:15px;margin:9px 0;border-radius:14px;border-left:4px solid #1976d2}
+.item b{display:block}
+.item span{color:#6b7280;font-size:13px}
+button{font:inherit}
+.add{float:right;border:0;background:#1677e8;color:white;border-radius:10px;padding:8px 13px}
+.save{width:100%;background:#1677e8;color:white;border:0;border-radius:12px;padding:14px;font-weight:bold}
+.page{display:none}.page.active{display:block}
+nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:9px 2px}
+nav button{border:0;background:none;font-size:11px;color:#4b5563}
+nav strong{display:block;font-size:20px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🛡️ СБ Семей</h1>
+<p>Система контроля и безопасности</p>
+</header>
+
+<main>
+
+<section id="home" class="page active">
+<h2>Главная</h2>
+
+<div class="grid">
+<div class="card"><b id="spCount">47</b><small>ВСР / СП</small></div>
+<div class="card"><b>5</b><small>Магазинов</small></div>
+<div class="card"><b id="detCount">0</b><small>Задержаний</small></div>
+<div class="card"><b id="shortCount">0</b><small>Недостач</small></div>
+</div>
+
+<h2>Поиск</h2>
+<input class="search" placeholder="Поиск по ВСР / СП..." oninput="search(this.value)">
+<div id="homeList"></div>
+</section>
+
+
+<section id="sp" class="page">
+<h2>ВСР / СП <button class="add" onclick="page('addsp')">＋</button></h2>
+<div id="spList"></div>
+</section>
+
+
+<section id="det" class="page">
+<h2>Задержания <button class="add" onclick="page('adddet')">＋</button></h2>
+<div id="detList"></div>
+</section>
+
+
+<section id="short" class="page">
+<h2>Недостачи <button class="add" onclick="page('addshort')">＋</button></h2>
+<div id="shortList"></div>
+</section>
+
+
+<section id="stores" class="page">
+<h2>Магазины</h2>
+<div id="stores"></div>
+</section>
+
+
+<section id="reports" class="page">
+<h2>Отчёты</h2>
+<div class="grid">
+<div class="card"><b id="r1">47</b><small>ВСР / СП</small></div>
+<div class="card"><b id="r2">0</b><small>Задержания</small></div>
+<div class="card"><b id="r3">0</b><small>Недостачи</small></div>
+<div class="card"><b>5</b><small>Магазинов</small></div>
+</div>
+</section>
+
+
+<section id="addsp" class="page">
+<h2>Добавить ВСР / СП</h2>
+<select id="spstore">
+<option>СЕМ01</option><option>СЕМ02</option><option>СЕМ03</option>
+<option>СЕМ04</option><option>СЕМ05</option>
+</select><br><br>
+
+<select id="sptype">
+<option>СП</option><option>ВСР</option><option>ПКО</option>
+</select><br><br>
+
+<textarea id="sptext" placeholder="Описание нарушения"></textarea><br><br>
+
+<button class="save" onclick="addSP()">Сохранить</button>
+</section>
+
+
+<section id="adddet" class="page">
+<h2>Новое задержание</h2>
+
+<select id="dstore">
+<option>СЕМ01</option><option>СЕМ02</option><option>СЕМ03</option>
+<option>СЕМ04</option><option>СЕМ05</option>
+</select><br><br>
+
+<input id="dname" placeholder="ФИО"><br><br>
+<input id="dgroup" placeholder="Группа товара"><br><br>
+<input id="dam" type="number" placeholder="Сумма ущерба"><br><br>
+
+<button class="save" onclick="addDet()">Сохранить</button>
+</section>
+
+
+<section id="addshort" class="page">
+<h2>Новая недостача</h2>
+
+<select id="sstore">
+<option>СЕМ01</option><option>СЕМ02</option><option>СЕМ03</option>
+<option>СЕМ04</option><option>СЕМ05</option>
+</select><br><br>
+
+<input id="sitem" placeholder="Наименование товара"><br><br>
+<input id="sqty" placeholder="Количество"><br><br>
+<input id="sam" type="number" placeholder="Сумма ₸"><br><br>
+
+<button class="save" onclick="addShort()">Сохранить</button>
+</section>
+
+</main>
+
+
+<nav>
+<button onclick="page('home')"><strong>⌂</strong>Главная</button>
+<button onclick="page('stores')"><strong>▣</strong>Магазины</button>
+<button onclick="page('det')"><strong>♙</strong>Задержания</button>
+<button onclick="page('short')"><strong>▤</strong>Недостачи</button>
+<button onclick="page('reports')"><strong>▥</strong>Отчёты</button>
+</nav>
+
+
+<script>
+
+let sp=[
+["15.01.2025","СЕМ01","СП","Хищение ТМЦ"],
+["12.02.2025","СЕМ05","СП","Просрочка товара с витрины"],
+["04.03.2025","СЕМ02","СП","Холодность приемщика"],
+["02.04.2025","СЕМ05","СП","Фальсификация группового отчета"],
+["08.04.2025","СЕМ05","СП","Холодность СВК магазина"],
+["16.04.2025","СЕМ01","СП","Нарушение порядка транспортировки"],
+["30.05.2025","СЕМ04","СП","Удержание с СВК"],
+["19.06.2025","СЕМ02","СП","Фиктивные передачи"],
+["26.06.2025","СЕМ03","СП","Приход товара воздухом"],
+["26.06.2025","СЕМ04","СП","Пропуск кассы"],
+["26.09.2025","СЕМ03","ВСР","Хищение ТМЦ сотрудниками"],
+["10.03.2026","Семей","ВСР","Хищение табачных изделий"],
+["18.03.2026","СЕМ04","СП","Контрольный закуп"],
+["18.03.2026","СЕМ05","ВСР","Недостача ТМЦ"],
+["30.03.2026","СЕМ04","ВСР","Удержание сотрудника"],
+["25.07.2026","СЕМ04","СП","Докладная по недостачам"],
+["29.07.2026","СЕМ04","ВСР","Удержание УМ и персонала"],
+["29.07.2026","СЕМ05","ВСР","Докладная по употреблению"],
+["29.09.2026","СЕМ02","ВСР","Холодность сотрудников"]
+];
+
+let det=[];
+let shortage=[];
+
+function page(id){
+document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+render();
+scrollTo(0,0);
+}
+
+function render(){
+let html=sp.slice().reverse().map(x=>
+`<div class="item"><b>${x[1]} · ${x[2]}</b>
+${x[3]}<br><span>${x[0]}</span></div>`).join("");
+
+document.getElementById("spList").innerHTML=html;
+document.getElementById("homeList").innerHTML=html.slice(0,5000);
+
+document.getElementById("detList").innerHTML=
+det.length?det.map(x=>
+`<div class="item"><b>${x.name}</b>${x.store}<br>
+${x.group}<br><span>Ущерб: ${x.amount} ₸</span></div>`).join("")
+:"<div class='card'>Записей пока нет</div>";
+
+document.getElementById("shortList").innerHTML=
+shortage.length?shortage.map(x=>
+`<div class="item"><b>${x.item}</b>${x.store}<br>
+${x.qty}<br><span>${x.amount} ₸</span></div>`).join("")
+:"<div class='card'>Записей пока нет</div>";
+
+document.getElementById("spCount").textContent=sp.length;
+document.getElementById("detCount").textContent=det.length;
+document.getElementById("shortCount").textContent=shortage.length;
+document.getElementById("r1").textContent=sp.length;
+document.getElementById("r2").textContent=det.length;
+document.getElementById("r3").textContent=shortage.length;
+
+document.getElementById("stores").innerHTML=
+["СЕМ01","СЕМ02","СЕМ03","СЕМ04","СЕМ05"]
+.map(x=>`<div class="item"><b>${x}</b><span>Карточка магазина</span></div>`).join("");
+}
+
+function search(q){
+q=q.toLowerCase();
+document.getElementById("homeList").innerHTML=
+sp.filter(x=>x.join(" ").toLowerCase().includes(q))
+.map(x=>`<div class="item"><b>${x[1]} · ${x[2]}</b>${x[3]}<br><span>${x[0]}</span></div>`).join("");
+}
+
+function addSP(){
+sp.push([
+new Date().toLocaleDateString("ru-RU"),
+spstore.value,
+sptype.value,
+sptext.value||"Без описания"
+]);
+localStorage.setItem("sp",JSON.stringify(sp));
+page("sp");
+}
+
+function addDet(){
+det.push({
+store:dstore.value,
+name:dname.value||"Без ФИО",
+group:dgroup.value,
+amount:dam.value||0
+});
+localStorage.setItem("det",JSON.stringify(det));
+page("det");
+}
+
+function addShort(){
+shortage.push({
+store:sstore.value,
+item:sitem.value||"Без названия",
+qty:sqty.value,
+amount:sam.value||0
+});
+localStorage.setItem("short",JSON.stringify(shortage));
+page("short");
+}
+
+let saved=localStorage.getItem("sp");
+if(saved)sp=JSON.parse(saved);
+
+saved=localStorage.getItem("det");
+if(saved)det=JSON.parse(saved);
+
+saved=localStorage.getItem("short");
+if(saved)shortage=JSON.parse(saved);
+
+render();
+
+</script>
+</body>
+</html>
